@@ -1,0 +1,13 @@
+.claude/*
+!.claude/skills/
+
+.env*
+*.bak
+*.log
+.cache/
+
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
