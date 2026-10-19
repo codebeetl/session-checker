@@ -52,5 +52,11 @@ out=$(hook_input s2 PostToolUse | "$scripts/wrap-up-hook.sh")
 [ -n "$out" ] && r=pass || r=fail
 check "hook still warns another session" "$r"
 
+seed_cache 95.0
+touch -d '2 minutes ago' "$SESSION_WINDOW_CACHE/usage.json"
+out=$(hook_input s3 PostToolUse | "$scripts/wrap-up-hook.sh")
+[ -z "$out" ] && r=pass || r=fail
+check "hook ignores a cached figure older than a minute" "$r"
+
 rm -r "$SESSION_WINDOW_CACHE"
 [ "$failures" -eq 0 ]

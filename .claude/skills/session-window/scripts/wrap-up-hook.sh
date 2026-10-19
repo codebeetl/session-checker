@@ -4,7 +4,7 @@
 threshold=${SESSION_WINDOW_THRESHOLD:-90}
 
 input=$(cat)
-body=$("$(dirname "$0")/fetch-usage.sh" 2>/dev/null) || exit 0
+body=$("$(dirname "$0")/fetch-usage.sh" 60 2>/dev/null) || exit 0
 used=$(jq -r '.five_hour.utilization // empty' <<<"$body")
 [ -n "$used" ] || exit 0
 awk -v u="$used" -v t="$threshold" 'BEGIN { exit !(u >= t) }' || exit 0
