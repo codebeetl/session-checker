@@ -4,6 +4,7 @@
 threshold=${SESSION_WINDOW_THRESHOLD:-90}
 
 input=$(cat)
+[ -z "$(jq -r '.agent_id // empty' <<<"$input")" ] || exit 0
 body=$("$(dirname "$0")/fetch-usage.sh" 60 2>/dev/null) || exit 0
 used=$(jq -r '.five_hour.utilization // empty' <<<"$body")
 [ -n "$used" ] || exit 0
