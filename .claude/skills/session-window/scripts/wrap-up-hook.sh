@@ -14,7 +14,7 @@ session=$(jq -r '.session_id // "unknown"' <<<"$input")
 resets=$(jq -r '.five_hour.resets_at // empty' <<<"$body")
 
 warned_dir="${SESSION_WINDOW_CACHE:-$HOME/.cache/session-window}/warned"
-marker="$warned_dir/$session-$(date -d "${resets:-@0}" +%s)"
+marker="$warned_dir/$session-$(( ($(date -d "${resets:-@0}" +%s) + 30) / 60 ))"
 [ -e "$marker" ] && exit 0
 mkdir -p "$warned_dir"
 touch "$marker"

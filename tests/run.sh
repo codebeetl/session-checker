@@ -58,5 +58,18 @@ out=$(hook_input s3 PostToolUse | "$scripts/wrap-up-hook.sh")
 [ -z "$out" ] && r=pass || r=fail
 check "hook ignores a cached figure older than a minute" "$r"
 
+seed_cache_resetting_at() {
+  cat >"$SESSION_WINDOW_CACHE/usage.json" <<EOF
+{"five_hour":{"utilization":95.0,"resets_at":"$1"}}
+EOF
+}
+
+seed_cache_resetting_at "2099-01-01T14:09:59.556+00:00"
+out=$(hook_input s4 PostToolUse | "$scripts/wrap-up-hook.sh")
+seed_cache_resetting_at "2099-01-01T14:10:00.266+00:00"
+again=$(hook_input s4 PostToolUse | "$scripts/wrap-up-hook.sh")
+[ -n "$out" ] && [ -z "$again" ] && r=pass || r=fail
+check "hook warns once when resets_at jitters under a second" "$r"
+
 rm -r "$SESSION_WINDOW_CACHE"
 [ "$failures" -eq 0 ]
