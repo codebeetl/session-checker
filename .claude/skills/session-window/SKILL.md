@@ -24,6 +24,8 @@ Report the 5h line to the user. Add the 7d line only when the 7d window is the t
 
 When the 5h window is 90% used or more and work remains, MUST wrap up: start no new long or multi-agent work, checkpoint the current step, persist memory, and run the `handoff` skill.
 
+- Where the user sets a usage cap for either window (e.g. "stay under 98% weekly"), MUST re-run the script before each new step, and MUST wrap up as above before a step could pass the cap.
+
 `scripts/wrap-up-hook.sh` is a `PostToolUse`/`UserPromptSubmit` hook that injects this wrap-up note once per session per window. `SESSION_WINDOW_THRESHOLD` sets the percent (default 90).
 
 ## Errors
